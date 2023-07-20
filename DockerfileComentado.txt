@@ -1,0 +1,39 @@
+FROM node:14
+WORKDIR /app-node
+COPY . .
+RUN npm install
+ENTRYPOINT npm start
+
+
+Comentários:
+FROM node:14: Esta linha está definindo a imagem base que será usada para criar a imagem do seu aplicativo. Neste caso, é uma imagem que já tem o Node.js versão 14 instalado.
+
+WORKDIR /app-node: Esta linha está definindo o diretório de trabalho dentro do container Docker. Todos os comandos que forem executados a seguir (como o COPY . . e RUN npm install) serão executados neste diretório.
+
+COPY . .: Esta linha está copiando todos os arquivos e pastas (exceto aqueles definidos no .dockerignore) do diretório atual (onde você está construindo a imagem Docker) para o diretório de trabalho do container (/app-node).
+
+RUN npm install: Este comando está instalando as dependências do seu aplicativo. Ele faz isso executando npm install, que lê o arquivo package.json do seu aplicativo e instala todas as dependências listadas nele.
+
+ENTRYPOINT npm start: Este é o comando que será executado quando um container for iniciado a partir da imagem. No seu caso, está executando npm start, que geralmente inicia o aplicativo Node.js.
+
+//Executando
+docker build -t matheusdocker/app-node:1.0 .
+docker run -d -p 8080:3000 matheusdocker/app-node:1.0
+
+Comentários:
+docker build -t matheusdocker/app-node:1.0 .: Este comando está dizendo ao Docker para construir uma nova imagem.
+
+
+docker build: Este é o comando para construir uma nova imagem Docker.
+-t matheusdocker/app-node:1.0: A opção -t é usada para nomear e marcar a imagem. Neste caso, a imagem será chamada matheusdocker/app-node e a tag será 1.0.
+.: Este é o contexto de construção, que normalmente é o local onde está o Dockerfile. O . representa o diretório atual.
+
+
+docker run -d -p 8080:3000 matheusdocker/app-node:1.0: Este comando está dizendo ao Docker para iniciar um novo container usando a imagem que você acabou de construir.
+docker run: Este é o comando para iniciar um novo container Docker.
+-d: Esta opção faz com que o container seja executado em segundo plano (ou "detached mode"). Isso significa que o container irá iniciar e executar em segundo plano, sem se anexar ao seu terminal.
+-p 8080:3000: Esta opção mapeia a porta 8080 do host (a sua máquina) para a porta 3000 do container. Isso significa que qualquer coisa que estiver ouvindo na porta 3000 do container será acessível na porta 8080 do host.
+
+matheusdocker/app-node:1.0: Esta é a imagem que será usada para iniciar o container.
+
+Em resumo, o primeiro comando está construindo uma imagem Docker a partir do seu Dockerfile, e o segundo comando está iniciando um container a partir dessa imagem. O container está sendo executado em segundo plano, e a porta 3000 do container está sendo mapeada para a porta 8080 do seu host, tornando a aplicação acessível através do endereço http://localhost:8080 (ou http://[IP do seu host]:8080 se você estiver acessando de outra máquina).
