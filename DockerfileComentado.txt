@@ -4,11 +4,23 @@ COPY . .
 RUN npm install
 ENTRYPOINT npm start
 
+Etapas:
+//Fazer build da imagem com as instruções 
+docker build -t matheusdocker/app-node:1.0 .
+
+//Rodando aplicação
+docker run -d -p 8080:3000 matheusdocker/app-node:1.0
 
 Comentários:
 FROM node:14: Esta linha está definindo a imagem base que será usada para criar a imagem do seu aplicativo. Neste caso, é uma imagem que já tem o Node.js versão 14 instalado.
 
 WORKDIR /app-node: Esta linha está definindo o diretório de trabalho dentro do container Docker. Todos os comandos que forem executados a seguir (como o COPY . . e RUN npm install) serão executados neste diretório.
+
+ARG PORT=6000 : É específico para definir a porta durante a construção da imagem
+
+ENV PORT=$PORT : Dentro do container define a porta
+
+EXPOSE : É usado para informar ao Docker que o container escuta em portas de rede específicas em tempo de execução. No entanto, isso não significa que as portas estão acessíveis publicamente. Para torná-las acessíveis, você precisa usar a opção -p ao executar o comando docker run.
 
 COPY . .: Esta linha está copiando todos os arquivos e pastas (exceto aqueles definidos no .dockerignore) do diretório atual (onde você está construindo a imagem Docker) para o diretório de trabalho do container (/app-node).
 
